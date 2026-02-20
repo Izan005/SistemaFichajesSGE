@@ -1,5 +1,7 @@
 package com.example.sistemafichajessge.ui.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,7 +12,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.sistemafichajessge.ui.home.HomeScreen
 import com.example.sistemafichajessge.ui.login.LoginScreen
+import com.example.sistemafichajessge.ui.task.TaskScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation(
     navController : NavHostController,
@@ -39,6 +43,20 @@ fun AppNavigation(
                 }
             )) {
             HomeScreen(
+                navigateBack = { navController.popBackStack() },
+                navigateToTasks = { navController.navigate("${TaskScreen.route}/$it")}
+            )
+        }
+
+        composable(
+            route = TaskScreen.routeWithArgs,
+            arguments = listOf(
+                navArgument(TaskScreen.userIdArg){
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            TaskScreen(
                 navigateBack = { navController.popBackStack() }
             )
         }
