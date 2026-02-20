@@ -15,6 +15,7 @@ class FichajesApplication : Application(){
     val userRepo by lazy { UserRepository(database.userDao()) }
 
     val registryRepo by lazy { RegistryRepository(database.registryDao()) }
+
     val taskRepo by lazy { TaskRepository(database.taskDao()) }
 
 }

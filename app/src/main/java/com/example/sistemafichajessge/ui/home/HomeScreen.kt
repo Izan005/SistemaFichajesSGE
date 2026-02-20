@@ -3,6 +3,7 @@ package com.example.sistemafichajessge.ui.home
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,10 +21,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -33,7 +37,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -56,7 +62,8 @@ object HomeScreen : FichajesNavDestination {
 fun HomeScreen(
     viewModel: HomeViewModel = viewModel(factory = FichajesViewModelProvider.Factory),
     modifier: Modifier = Modifier,
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    navigateToTasks: (Int) -> Unit
 ){
     val user by viewModel.userRecieved.collectAsStateWithLifecycle()
 
@@ -84,25 +91,28 @@ fun HomeScreen(
 
     val getMonthlyStats = viewModel.getMonthlyStats()
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        //verticalArrangement = Arrangement.Top,
-        modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())
-    ) {
-        SubTopBar(
-            user = user,
-            logOut = navigateBack
-        )
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ){
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            //verticalArrangement = Arrangement.Top,
+            modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())
+        ) {
+            SubTopBar(
+                user = user,
+                logOut = navigateBack
+            )
 
-        UserCard(
-            userName = user?.name ?: "Cargando...",
-            departmentName = departmentUser?.name ?: "Cargando...",
-            job = user?.job ?: "Cargando...",
-            user = user,
-            viewModel = viewModel
-        )
+            UserCard(
+                userName = user?.name ?: "Cargando...",
+                departmentName = departmentUser?.name ?: "Cargando...",
+                job = user?.job ?: "Cargando...",
+                user = user,
+                viewModel = viewModel
+            )
 
-        Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
 //        RegistriesCard(
 //            registries = registriesByUser,
@@ -110,39 +120,67 @@ fun HomeScreen(
 //            viewModel = viewModel
 //        )
 
-        StatsCard(
-            title = "Estadísticas Generales",
-            avgWorkedHours = averageHoursWorked,
-            avgRestHours = averageHoursBreak,
-            avgExtraHours = averageOvertimeHours,
-            daysWorkedInCurrentMonth = daysWorkedInCurrentMonth,
-            missingDaysInMonth = missingDaysInMonth,
-            tardinessInCurrentMonth = totalTardinessDaysInCurrentMonth,
-            daysWorkedInCurrentWeek = daysWorkedInCurrentWeek,
-            missingDaysInCurrentWeek = missingDaysInCurrentWeek
-        )
+            StatsCard(
+                title = "Estadísticas Generales",
+                avgWorkedHours = averageHoursWorked,
+                avgRestHours = averageHoursBreak,
+                avgExtraHours = averageOvertimeHours,
+                daysWorkedInCurrentMonth = daysWorkedInCurrentMonth,
+                missingDaysInMonth = missingDaysInMonth,
+                tardinessInCurrentMonth = totalTardinessDaysInCurrentMonth,
+                daysWorkedInCurrentWeek = daysWorkedInCurrentWeek,
+                missingDaysInCurrentWeek = missingDaysInCurrentWeek
+            )
 
-        Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-        HistoryCard(
-            title = "Historial para este mes",
-            hoursDo = getMonthlyStats.first,
-            overtimeHours = getMonthlyStats.second,
-            restHours = getMonthlyStats.third
-        )
+            HistoryCard(
+                title = "Historial para este mes",
+                hoursDo = getMonthlyStats.first,
+                overtimeHours = getMonthlyStats.second,
+                restHours = getMonthlyStats.third
+            )
 
-        Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-        HistoryCard(
-            title = "Historial para esta semana",
-            hoursDo = getWeeklyStats.first,
-            overtimeHours = getWeeklyStats.second,
-            restHours = getWeeklyStats.third
-        )
+            HistoryCard(
+                title = "Historial para esta semana",
+                hoursDo = getWeeklyStats.first,
+                overtimeHours = getWeeklyStats.second,
+                restHours = getWeeklyStats.third
+            )
 
-        Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+
+        }
+
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.align(Alignment.BottomEnd)
+                .padding(20.dp)
+                .shadow(elevation = 5.dp, shape = CircleShape)
+        ){
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier =
+                    Modifier.background(color = Color(0xFF2C3E50), CircleShape)
+                    .clip(CircleShape)
+                    .size(80.dp)
+                    .padding(20.dp)
+                        .clickable {
+                            navigateToTasks(user?.id ?: 0)
+                        }
+            ){
+                Icon(
+                    imageVector = Icons.Default.DateRange,
+                    contentDescription = "Crear Tareas",
+                    tint = Color.White
+                )
+            }
+        }
 
     }
+
 }
 
 @Composable
