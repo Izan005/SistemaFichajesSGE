@@ -4,26 +4,35 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 import com.example.sistemafichajessge.data.dao.DepartmentDao
 import com.example.sistemafichajessge.data.dao.RegistryDao
+import com.example.sistemafichajessge.data.dao.TaskDao
 import com.example.sistemafichajessge.data.dao.UserDao
+import com.example.sistemafichajessge.data.datatypes.Converters
 import com.example.sistemafichajessge.data.model.Department
 import com.example.sistemafichajessge.data.model.Registry
+import com.example.sistemafichajessge.data.model.Task
 import com.example.sistemafichajessge.data.model.User
 
 @Database(
     entities = [
         User::class,
         Registry::class,
-        Department::class       ],
+        Department::class,
+        Task::class
+    ],
     version = 1,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun departmentDao(): DepartmentDao
     abstract fun registryDao(): RegistryDao
     abstract fun userDao(): UserDao
+    abstract fun taskDao(): TaskDao
 
     companion object {
         @Volatile

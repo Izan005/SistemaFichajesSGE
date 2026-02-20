@@ -3,6 +3,7 @@ package com.example.sistemafichajessge.data.dbSingleton
 import android.app.Application
 import com.example.sistemafichajessge.data.repository.DepartmentRepository
 import com.example.sistemafichajessge.data.repository.RegistryRepository
+import com.example.sistemafichajessge.data.repository.TaskRepository
 import com.example.sistemafichajessge.data.repository.UserRepository
 import kotlin.getValue
 
@@ -14,5 +15,6 @@ class FichajesApplication : Application(){
     val userRepo by lazy { UserRepository(database.userDao()) }
 
     val registryRepo by lazy { RegistryRepository(database.registryDao()) }
+    val taskRepo by lazy { TaskRepository(database.taskDao()) }
 
 }
