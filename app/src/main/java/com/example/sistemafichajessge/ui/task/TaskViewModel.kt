@@ -10,6 +10,7 @@ import com.example.sistemafichajessge.data.model.Task
 import com.example.sistemafichajessge.data.repository.TaskRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -79,8 +80,12 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getById(id: Int): Flow<Task> {
-        return repo.getById(id)
+    fun getById(id: Int): StateFlow<Task?> {
+        return repo.getById(id).stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            null
+        )
     }
 
 
