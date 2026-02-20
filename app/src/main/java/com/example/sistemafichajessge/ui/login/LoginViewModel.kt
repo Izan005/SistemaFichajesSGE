@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.example.sistemafichajessge.data.datatypes.Quadruple
 import com.example.sistemafichajessge.data.dbSingleton.FichajesApplication
 import com.example.sistemafichajessge.data.model.Department
 import com.example.sistemafichajessge.data.model.Registry
@@ -16,7 +15,6 @@ import com.example.sistemafichajessge.data.model.User
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Instant

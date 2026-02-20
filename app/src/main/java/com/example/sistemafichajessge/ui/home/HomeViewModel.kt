@@ -4,7 +4,6 @@ import android.app.Application
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateListOf
-
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -17,7 +16,6 @@ import com.example.sistemafichajessge.data.model.User
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch

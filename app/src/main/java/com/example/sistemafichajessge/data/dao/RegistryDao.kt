@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.sistemafichajessge.data.model.Registry
-import com.example.sistemafichajessge.data.model.User
 import kotlinx.coroutines.flow.Flow
 
 @Dao

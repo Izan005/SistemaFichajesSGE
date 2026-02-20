@@ -5,7 +5,6 @@ import com.example.sistemafichajessge.data.repository.DepartmentRepository
 import com.example.sistemafichajessge.data.repository.RegistryRepository
 import com.example.sistemafichajessge.data.repository.TaskRepository
 import com.example.sistemafichajessge.data.repository.UserRepository
-import kotlin.getValue
 
 class FichajesApplication : Application(){
     private val database by lazy { AppDatabase.getInstance(this) }
