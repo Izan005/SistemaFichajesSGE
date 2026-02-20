@@ -1,5 +1,7 @@
 package com.example.sistemafichajessge
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
@@ -8,9 +10,11 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.sistemafichajessge.data.dbSingleton.FichajesApplication
 import com.example.sistemafichajessge.ui.home.HomeViewModel
 import com.example.sistemafichajessge.ui.login.LoginViewModel
+import com.example.sistemafichajessge.ui.task.TaskViewModel
 
 object FichajesViewModelProvider {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     val Factory = viewModelFactory {
 
         initializer {
@@ -29,6 +33,14 @@ object FichajesViewModelProvider {
 
             HomeViewModel(
                 savedStateHandle = this.createSavedStateHandle(),
+                application = application
+            )
+        }
+
+        initializer {
+            val application = fichajesApplication()
+
+            TaskViewModel(
                 application = application
             )
         }
