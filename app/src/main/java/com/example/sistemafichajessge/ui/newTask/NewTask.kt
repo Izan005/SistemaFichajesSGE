@@ -6,16 +6,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sistemafichajessge.ui.navigation.FichajesNavDestination
 import com.example.sistemafichajessge.ui.task.TaskViewModel
 
-object NewTask : FichajesNavDestination {
+object NewTaskScreen : FichajesNavDestination {
     override val route = "new_task"
-
-    const val userIdArg = "id_user"
-
-    val routeWithArgs = "${NewTask.route}/{$userIdArg}"
 }
 
 @Composable
-fun NewTask(
+fun NewTaskScreen(
     modifier: Modifier = Modifier,
     viewModel: TaskViewModel = viewModel()
     ) {

@@ -112,11 +112,7 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-//        RegistriesCard(
-//            registries = registriesByUser,
-//            user = user,
-//            viewModel = viewModel
-//        )
+
 
             StatsCard(
                 title = "Estadísticas Generales",
@@ -172,7 +168,8 @@ fun HomeScreen(
                 Icon(
                     imageVector = Icons.Default.DateRange,
                     contentDescription = "Crear Tareas",
-                    tint = Color.White
+                    tint = Color.White,
+                    modifier = Modifier.clip(CircleShape)
                 )
             }
         }

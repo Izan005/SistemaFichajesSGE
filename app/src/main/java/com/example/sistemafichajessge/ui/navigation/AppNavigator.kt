@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.sistemafichajessge.ui.home.HomeScreen
 import com.example.sistemafichajessge.ui.login.LoginScreen
+import com.example.sistemafichajessge.ui.newTask.NewTaskScreen
 import com.example.sistemafichajessge.ui.task.TaskScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -56,8 +57,13 @@ fun AppNavigation(
             )
         ) {
             TaskScreen(
-                navigateBack = { navController.popBackStack() }
+                navigateBack = { navController.popBackStack() },
+                navigateToCreateTask = { navController.navigate(NewTaskScreen.route)}
             )
+        }
+
+        composable(route = NewTaskScreen.route){
+            NewTaskScreen()
         }
     }
 }

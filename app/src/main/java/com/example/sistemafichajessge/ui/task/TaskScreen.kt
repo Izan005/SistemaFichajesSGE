@@ -36,6 +36,7 @@ object TaskScreen : FichajesNavDestination {
 fun TaskScreen(
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit,
+    navigateToCreateTask: () -> Unit,
     viewModel: TaskViewModel = viewModel()
     ) {
 
@@ -58,7 +59,9 @@ fun TaskScreen(
             contentAlignment = Alignment.Center,
             modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp)
         ) {
-            CreateTaskButton()
+            CreateTaskButton(
+                navigateToCreateTask = navigateToCreateTask
+            )
         }
     }
 
@@ -67,6 +70,7 @@ fun TaskScreen(
 @Composable
 fun CreateTaskButton(
     modifier: Modifier = Modifier,
+    navigateToCreateTask: () -> Unit,
     viewModel: TaskViewModel = viewModel()
 ){
     Box(
@@ -77,13 +81,14 @@ fun CreateTaskButton(
                 .size(80.dp)
                 .padding(20.dp)
                 .clickable {
-
+                    navigateToCreateTask()
                 }
     ){
         Icon(
             imageVector = Icons.Default.Add,
             contentDescription = "Crear Tarea",
-            tint = Color.White
+            tint = Color.White,
+            modifier = Modifier.clip(CircleShape)
         )
     }
 }
