@@ -4,7 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,17 +17,28 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sistemafichajessge.data.model.Task
 import com.example.sistemafichajessge.ui.navigation.FichajesNavDestination
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 object TaskScreen : FichajesNavDestination {
     override val route = "task"
@@ -89,6 +105,100 @@ fun CreateTaskButton(
             contentDescription = "Crear Tarea",
             tint = Color.White,
             modifier = Modifier.clip(CircleShape)
+        )
+    }
+}
+
+
+@Composable
+fun TaskCard(task: Task, onClick: () -> Unit) {
+    // Formato de fecha sencillo
+    val dateFormatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        onClick = onClick,
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF1A1C23) // Gris grafito oscuro
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = task.nombre,
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                // Badge de estado
+                StatusBadge(task.estado)
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = task.descripcion,
+                color = Color(0xFF95A1AC), // Gris secundario
+                fontSize = 14.sp,
+                maxLines = 2
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Divider(color = Color(0xFF2D3139), thickness = 0.5.dp)
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Depto: ${task.departDestino}",
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontSize = 12.sp
+                )
+                Text(
+                    text = dateFormatter.format(task.timeStamp),
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontSize = 12.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun StatusBadge(estado: String) {
+    val color = when (estado.lowercase()) {
+        "hacer" -> Color(0xFFC5A059) // Dorado/Ocre
+        "progreso" -> Color(0xFF3498DB) // Azul
+        else -> Color(0xFF2ECC71) // Verde
+    }
+
+    Surface(
+        color = color.copy(alpha = 0.2f),
+        shape = MaterialTheme.shapes.small,
+        border = androidx.compose.foundation.BorderStroke(1.dp, color)
+    ) {
+        Text(
+            text = estado.uppercase(),
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+            color = color,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Bold
         )
     }
 }
