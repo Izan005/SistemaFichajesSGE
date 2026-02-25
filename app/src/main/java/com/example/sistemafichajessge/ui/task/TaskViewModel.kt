@@ -42,6 +42,14 @@ class TaskViewModel(
         emptyList()
     )
 
+    fun getUserDestination(id: Int): StateFlow<User?> {
+        return repo.getUserDestination(id).stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
+    }
+
     fun searchDepartment(id: Int): StateFlow<Department?>{
         return repoDep.getDepartment(id).stateIn(
             scope = viewModelScope,

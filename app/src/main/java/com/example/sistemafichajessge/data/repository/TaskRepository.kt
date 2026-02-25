@@ -2,6 +2,7 @@ package com.example.sistemafichajessge.data.repository
 
 import com.example.sistemafichajessge.data.dao.TaskDao
 import com.example.sistemafichajessge.data.model.Task
+import com.example.sistemafichajessge.data.model.User
 import kotlinx.coroutines.flow.Flow
 
 class TaskRepository(private val dao: TaskDao) {
@@ -28,4 +29,9 @@ class TaskRepository(private val dao: TaskDao) {
     fun getById(id: Int): Flow<Task> {
         return dao.getById(id)
     }
+
+    fun getUserDestination(id: Int): Flow<User> {
+        return dao.getUserDestination(id)
+    }
+
 }
