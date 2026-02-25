@@ -19,6 +19,12 @@ import java.util.Date
             parentColumns = ["id"],
             childColumns = ["departDestino"],
             onDelete = NO_ACTION
+        ),
+        ForeignKey(
+            entity = User::class,
+            parentColumns = ["id"],
+            childColumns = ["destinatario"],
+            onDelete = NO_ACTION
         )
     ]
 )
@@ -29,6 +35,7 @@ data class Task (
     val descripcion: String,
     val timeStamp: Date,
     val creador: Int,
+    val destinatario: Int?,
     val departDestino: Int,
     val isAll: Boolean = false,
     val estado: String = "hacer"
