@@ -227,11 +227,6 @@ fun TaskCard(
                     color = Color.White.copy(alpha = 0.7f),
                     fontSize = 12.sp
                 )
-                Text(
-                    text = dateFormatter.format(task.timeStamp),
-                    color = Color.White.copy(alpha = 0.7f),
-                    fontSize = 12.sp
-                )
             }
 
             // --- Sección Expandida: Botones de Acción ---
