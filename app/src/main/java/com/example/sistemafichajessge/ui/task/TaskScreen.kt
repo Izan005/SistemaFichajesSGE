@@ -25,7 +25,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -50,8 +49,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sistemafichajessge.data.model.Task
 import com.example.sistemafichajessge.data.model.User
 import com.example.sistemafichajessge.ui.navigation.FichajesNavDestination
-import com.example.sistemafichajessge.ui.newTask.NewTaskScreen.userIdArg
-import kotlinx.coroutines.flow.MutableStateFlow
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -149,9 +146,9 @@ fun TaskCard(
 // Usas un LaunchedEffect para lanzar la búsqueda cuando el ID cambie
     LaunchedEffect(task.destinatario) {
         task.destinatario?.let { id ->
-            // Aquí llamas a la función (que debería ser suspend o devolver el valor)
-            val user = viewModel.getUserDestination(id)
-            userDestinatario = user
+            viewModel.getUserDestination(id).collect { user ->
+                userDestinatario = user
+            }
         }
     }
 

@@ -35,13 +35,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sistemafichajessge.data.model.Department
 import com.example.sistemafichajessge.data.model.Task
 import com.example.sistemafichajessge.ui.navigation.FichajesNavDestination
-import com.example.sistemafichajessge.ui.newTask.NewTaskScreen.userIdArg
 import java.time.Instant
 import java.util.Date
 
