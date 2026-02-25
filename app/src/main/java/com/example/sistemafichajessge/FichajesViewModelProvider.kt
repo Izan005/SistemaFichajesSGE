@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.sistemafichajessge.data.dbSingleton.FichajesApplication
 import com.example.sistemafichajessge.ui.home.HomeViewModel
 import com.example.sistemafichajessge.ui.login.LoginViewModel
+import com.example.sistemafichajessge.ui.newTask.NewTaskViewModel
 import com.example.sistemafichajessge.ui.task.TaskViewModel
 
 object FichajesViewModelProvider {
@@ -41,6 +42,16 @@ object FichajesViewModelProvider {
             val application = fichajesApplication()
 
             TaskViewModel(
+                savedStateHandle = this.createSavedStateHandle(),
+                application = application
+            )
+        }
+
+        initializer {
+            val application = fichajesApplication()
+
+            NewTaskViewModel(
+                savedStateHandle = this.createSavedStateHandle(),
                 application = application
             )
         }

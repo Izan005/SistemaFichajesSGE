@@ -58,12 +58,20 @@ fun AppNavigation(
         ) {
             TaskScreen(
                 navigateBack = { navController.popBackStack() },
-                navigateToCreateTask = { navController.navigate(NewTaskScreen.route)}
+                navigateToCreateTask = { navController.navigate("${NewTaskScreen.route}/$it")}
             )
         }
 
-        composable(route = NewTaskScreen.route){
-            NewTaskScreen()
+        composable(route = NewTaskScreen.routeWithArgs,
+            arguments = listOf(
+                navArgument(NewTaskScreen.userIdArg){
+                    type = NavType.IntType
+                }
+            )){
+            NewTaskScreen(
+                navigateToTaskScreen = { navController.navigate("${TaskScreen.route}/$it")},
+                navigateBack = { navController.popBackStack() },
+            )
         }
     }
 }

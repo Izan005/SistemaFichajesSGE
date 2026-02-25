@@ -26,6 +26,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sistemafichajessge.data.model.Task
 import com.example.sistemafichajessge.ui.navigation.FichajesNavDestination
+import com.example.sistemafichajessge.ui.newTask.NewTaskScreen.userIdArg
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -52,7 +54,7 @@ object TaskScreen : FichajesNavDestination {
 fun TaskScreen(
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit,
-    navigateToCreateTask: () -> Unit,
+    navigateToCreateTask: (Int) -> Unit,
     viewModel: TaskViewModel = viewModel()
     ) {
 
@@ -62,12 +64,15 @@ fun TaskScreen(
         modifier = modifier.fillMaxSize()
     ){
         LazyColumn(
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ) {
             items(items = taskList, key = { it.id }){ task ->
-
+                TaskCard(
+                    task = task,
+                    onClick = {}
+                )
             }
         }
 
@@ -86,9 +91,12 @@ fun TaskScreen(
 @Composable
 fun CreateTaskButton(
     modifier: Modifier = Modifier,
-    navigateToCreateTask: () -> Unit,
+    navigateToCreateTask: (Int) -> Unit,
     viewModel: TaskViewModel = viewModel()
 ){
+
+    val user by viewModel.userRecieved.collectAsStateWithLifecycle()
+
     Box(
         contentAlignment = Alignment.Center,
         modifier =
@@ -97,7 +105,7 @@ fun CreateTaskButton(
                 .size(80.dp)
                 .padding(20.dp)
                 .clickable {
-                    navigateToCreateTask()
+                    navigateToCreateTask(user?.id ?: 0)
                 }
     ){
         Icon(
@@ -111,9 +119,14 @@ fun CreateTaskButton(
 
 
 @Composable
-fun TaskCard(task: Task, onClick: () -> Unit) {
+fun TaskCard(
+    task: Task,
+    onClick: () -> Unit,
+    viewModel: TaskViewModel = viewModel()) {
     // Formato de fecha sencillo
     val dateFormatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+
+    val department by viewModel.searchDepartment(task.departDestino).collectAsStateWithLifecycle()
 
     Card(
         modifier = Modifier
@@ -166,7 +179,7 @@ fun TaskCard(task: Task, onClick: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Depto: ${task.departDestino}",
+                    text = "Depto: ${department?.name ?: "Cargando..."}",
                     color = Color.White.copy(alpha = 0.7f),
                     fontSize = 12.sp
                 )
