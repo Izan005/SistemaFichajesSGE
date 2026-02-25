@@ -1,10 +1,13 @@
 package com.example.sistemafichajessge.ui.task
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,18 +18,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,7 +81,6 @@ fun TaskScreen(
             items(items = taskList, key = { it.id }){ task ->
                 TaskCard(
                     task = task,
-                    onClick = {}
                 )
             }
         }
@@ -121,20 +130,25 @@ fun CreateTaskButton(
 @Composable
 fun TaskCard(
     task: Task,
-    onClick: () -> Unit,
-    viewModel: TaskViewModel = viewModel()) {
-    // Formato de fecha sencillo
+    viewModel: TaskViewModel = viewModel()
+) {
     val dateFormatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
-
     val department by viewModel.searchDepartment(task.departDestino).collectAsStateWithLifecycle()
+
+    // Estado para controlar la expansión
+    var expanded by remember { mutableStateOf(false) }
+
+    // User recivido como parámetro
+    val user by viewModel.userRecieved.collectAsStateWithLifecycle()
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        onClick = onClick,
+            .padding(8.dp)
+            .animateContentSize(), // Animación automática al cambiar el tamaño
+        onClick = { expanded = !expanded }, // Alternar expansión al pulsar
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF1A1C23) // Gris grafito oscuro
+            containerColor = Color(0xFF1A1C23)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -143,6 +157,7 @@ fun TaskCard(
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
+            // --- Cabecera: Título y Badge ---
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -154,26 +169,24 @@ fun TaskCard(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-
-                // Badge de estado
                 StatusBadge(task.estado)
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // --- Descripción (Expandible) ---
             Text(
                 text = task.descripcion,
-                color = Color(0xFF95A1AC), // Gris secundario
+                color = Color(0xFF95A1AC),
                 fontSize = 14.sp,
-                maxLines = 2
+                maxLines = if (expanded) Int.MAX_VALUE else 2 // Muestra todo si está expandido
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            Divider(color = Color(0xFF2D3139), thickness = 0.5.dp)
-
+            HorizontalDivider(color = Color(0xFF2D3139), thickness = 0.5.dp)
             Spacer(modifier = Modifier.height(8.dp))
 
+            // --- Footer: Depto y Fecha ---
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -188,6 +201,61 @@ fun TaskCard(
                     color = Color.White.copy(alpha = 0.7f),
                     fontSize = 12.sp
                 )
+            }
+
+            // -- Usuario asignado a la tarea --
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Empleado Asignado: ${user?.name ?: "Ninguno"}",
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontSize = 12.sp
+                )
+                Text(
+                    text = dateFormatter.format(task.timeStamp),
+                    color = Color.White.copy(alpha = 0.7f),
+                    fontSize = 12.sp
+                )
+            }
+
+            // --- Sección Expandida: Botones de Acción ---
+            if (expanded) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Botón principal: Asignarse tarea
+                Button(
+                    onClick = { viewModel.update(task = task.copy(destinatario = user!!.id)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("ASIGNARME ESTA TAREA", fontWeight = FontWeight.Bold)
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+                Text("Cambiar estado:", color = Color.White.copy(alpha = 0.5f), fontSize = 12.sp)
+                Spacer(modifier = Modifier.height(4.dp))
+
+                // Paquete de 3 botones de estado
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    val estados = listOf("Hacer", "Haciendo", "Hecho")
+                    estados.forEach { estado ->
+                        OutlinedButton(
+                            onClick = { viewModel.update(task = task.copy(estado = estado)) },
+                            modifier = Modifier.weight(1f),
+                            border = BorderStroke(1.dp, Color(0xFF2D3139)),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                            contentPadding = PaddingValues(horizontal = 4.dp)
+                        ) {
+                            Text(estado, fontSize = 12.sp)
+                        }
+                    }
+                }
             }
         }
     }

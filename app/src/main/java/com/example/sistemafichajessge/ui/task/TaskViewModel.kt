@@ -65,6 +65,7 @@ class TaskViewModel(
         }
     }
 
+
     fun delete(task: Task) {
         viewModelScope.launch {
             try {
