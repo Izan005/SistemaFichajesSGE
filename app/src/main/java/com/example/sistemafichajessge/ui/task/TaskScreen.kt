@@ -33,6 +33,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,8 +48,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sistemafichajessge.data.model.Task
+import com.example.sistemafichajessge.data.model.User
 import com.example.sistemafichajessge.ui.navigation.FichajesNavDestination
 import com.example.sistemafichajessge.ui.newTask.NewTaskScreen.userIdArg
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -140,6 +143,18 @@ fun TaskCard(
 
     // User recivido como parámetro
     val user by viewModel.userRecieved.collectAsStateWithLifecycle()
+// Declaras la variable de estado vacía al principio
+    var userDestinatario by remember { mutableStateOf<User?>(null) }
+
+// Usas un LaunchedEffect para lanzar la búsqueda cuando el ID cambie
+    LaunchedEffect(task.destinatario) {
+        task.destinatario?.let { id ->
+            // Aquí llamas a la función (que debería ser suspend o devolver el valor)
+            val user = viewModel.getUserDestination(id)
+            userDestinatario = user
+        }
+    }
+
 
     Card(
         modifier = Modifier
@@ -203,13 +218,15 @@ fun TaskCard(
                 )
             }
 
+            Spacer(modifier = Modifier.height(8.dp))
+
             // -- Usuario asignado a la tarea --
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Empleado Asignado: ${user?.name ?: "Ninguno"}",
+                    text = "Empleado Asignado: ${userDestinatario?.name ?: "Ninguno"}",
                     color = Color.White.copy(alpha = 0.7f),
                     fontSize = 12.sp
                 )
