@@ -19,12 +19,6 @@ import java.util.Date
             parentColumns = ["id"],
             childColumns = ["departDestino"],
             onDelete = NO_ACTION
-        ),
-        ForeignKey(
-            entity = User::class,
-            parentColumns = ["id"],
-            childColumns = ["destinatario"],
-            onDelete = NO_ACTION
         )
     ]
 )
