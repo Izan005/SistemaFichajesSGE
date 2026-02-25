@@ -1,4 +1,4 @@
-package com.example.sistemafichajessge.ui.task
+package com.example.sistemafichajessge.ui.newTask
 
 import android.app.Application
 import android.widget.Toast
@@ -13,15 +13,23 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class TaskViewModel(application: Application) : AndroidViewModel(application) {
+class NewTaskViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repo: TaskRepository = (application as FichajesApplication).taskRepo
 
-    val taskList = repo.getAll().stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5_000L),
-        emptyList()
-    )
+    fun insert(task: Task) {
+        viewModelScope.launch {
+            try {
+                repo.insert(task)
+            } catch (e: Exception) {
+                Toast.makeText(
+                    application,
+                    "Insert fallido",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
 
     fun update(task: Task) {
         viewModelScope.launch {
@@ -72,6 +80,5 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
             null
         )
     }
-
 
 }
